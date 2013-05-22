@@ -1,7 +1,17 @@
-angular.module('gw2App', ['ngResource']).controller('gw2Ctrl', function ($scope, $http, $resource) {
+var app = angular.module('gw2App', ['ngResource']);
+
+app.config(function($routeProvider, $locationProvider) {
+  $routeProvider.when('/world/:worldId', { controller: 'gw2Ctrl' })
+});
+
+app.controller('gw2Ctrl', function ($scope, $http, $resource, $location, $route, $routeParams) {
   $http.defaults.useXDomain = true;
   // So CORS works event without OPTIONS requests supported by API server
   delete $http.defaults.headers.common['X-Requested-With'];
+
+  $scope.$on("$routeChangeSuccess", function($currentRoute, $previousRoute) {
+    $scope.worldId = $routeParams.worldId;
+  });
 
   Worlds = $resource('https://api.guildwars2.com/v1/world_names.json');
   Matches = $resource('https://api.guildwars2.com/v1/wvw/matches.json');
@@ -15,7 +25,7 @@ angular.module('gw2App', ['ngResource']).controller('gw2Ctrl', function ($scope,
   // When a world is selected...
   $scope.$watch('worldId', function() {
     Matches.get({}, function(data) {
-      // Loop through the matches to find the one in wich the selected world is participating
+      // Loop through the matches to find the one in wich one the selected world is participating
       for(i = 0; i < data.wvw_matches.length; i++) {
         m = data.wvw_matches[i];
         if (m.red_world_id == $scope.worldId || m.blue_world_id == $scope.worldId || m.green_world_id == $scope.worldId) {
@@ -40,6 +50,8 @@ angular.module('gw2App', ['ngResource']).controller('gw2Ctrl', function ($scope,
           break;
         }
       }
+      // Update the uri so the page for the selected world can be refreshed and bookmarked
+      if (typeof $scope.worldId != 'undefined') { $location.path('/world/' + $scope.worldId); }
     });
   });
 });
