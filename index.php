@@ -13,8 +13,8 @@
   <div ng-controller="gw2Ctrl">
     <h1>Guild Wars 2 API + AngularJS</h1>
 
-    <label for="world">World</label>
-    <select name="world" ng-model="worldId" ng-options="world.id as world.name for world in worlds"></select>
+    <label for="world_select">World</label>
+    <select id="world_select" ng-model="worldId" ng-options="world.id as world.name for world in worlds"></select>
 
     <section id="wvw">
       <h1>WvW</h1>
