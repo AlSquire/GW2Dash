@@ -72,7 +72,6 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
           break;
         }
       }
-      notify();
     });
   }
 
@@ -85,7 +84,16 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
     }
   });
 
+  // Set the selected refresh time interval
   $scope.$watch('interval', setTimer);
+
+  $scope.$watch('watchedEvents', function(newVal, oldVal) {
+    for (i = 0; i < oldVal.length; i++) {
+      if (oldVal[i].state != 'Active' && newVal[i].state == 'Active') {
+        notifyEvent(newVal[i]);
+      }
+    }
+  }, true);
 
   var setTimer = function() {
     $timeout.cancel(timer);
@@ -113,18 +121,15 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
     return eventNotificationsEnabled && window.webkitNotifications && webkitNotifications.checkPermission() == 0;
   }
 
-  var addNotifyEvent = function(e) {
-    if ($scope.isEventNotificationsEnabled()) { eventsToNotify.push(e); }
-  }
-
-  var notify = function() {
-    if (eventsToNotify.length > 0 && $scope.isEventNotificationsEnabled()) {
-      var text = "";
-      for (var i = 0; i < eventsToNotify.length; i++) {
-        text = text + '"' + eventsToNotify[i].name + '" is active NAO!';
-        text = text + "\n";
-      }
+  var notifyEvent = function(e) {
+    if ($scope.isEventNotificationsEnabled()) {
+      text = '"' + e.name + '" is active NAO!';
       webkitNotifications.createNotification('', "A Wild Dragon has Appeared in Tyria!", text).show();
     }
+  }
+
+  $scope.refresh = function() {
+    fetch();
+    setTimer(); // Reset the timer;
   }
 });
