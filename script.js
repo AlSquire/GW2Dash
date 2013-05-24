@@ -19,7 +19,7 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
   Events = $resource('https://api.guildwars2.com/v1/events.json');
 
   var timer;
-  $scope.interval = 30000;
+  $scope.interval = 0;
 
   $scope.worlds = Worlds.query();
   $scope.redWorld = {};
@@ -31,6 +31,9 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
     { id: "568A30CF-8512-462F-9D67-647D69BEFAED", name: "Tequatl the Sunless" },
     { id: "03BF176A-D59F-49CA-A311-39FC6F533F2F", name: "The Shatterer" }
   ]
+
+  var eventNotificationsEnabled = false;
+  var eventsToNotify = [];
 
   var fetch = function() {
     Matches.get({}, function(data) {
@@ -57,24 +60,32 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
             if (m.green_world_id == w.id) { $scope.greenWorld.name = w.name; }
           }
 
-          Events.get({ world_id: $scope.worldId }, function(data) {
-            $scope.events = data.events;
-            for (var i = 0; i < $scope.events.length; i++) {
-              e = $scope.events[i];
-              for (var j = 0; j < $scope.watchedEvents.length; j++) {
-                we = $scope.watchedEvents[j];
-                if (e.event_id == we.id) {
-                  we.state = e.state;
-                }
-              }
-            }
-          });
+          // Get the new states for the watched events
+          for (var i = 0; i < $scope.watchedEvents.length; i++) {
+            we = $scope.watchedEvents[i];
+            we.state = Events.get({ world_id: $scope.worldId, event_id: we.id}).$then(function(result) {
+              e = result.data.events[0];
+              return (e && e.state) ? e.state : "Inactive";
+            });
+          }
 
           break;
         }
       }
+      notify();
     });
   }
+
+ // When a world is selected...
+  $scope.$watch('worldId', function() {
+    if (typeof $scope.worldId != 'undefined') {
+      fetch();
+      // Update the uri so the page for the selected world can be refreshed and bookmarked
+      $location.path('/world/' + $scope.worldId);
+    }
+  });
+
+  $scope.$watch('interval', setTimer);
 
   var setTimer = function() {
     $timeout.cancel(timer);
@@ -86,14 +97,34 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
     }
   }
 
-  // When a world is selected...
-  $scope.$watch('worldId', function() {
-    if (typeof $scope.worldId != 'undefined') {
-      fetch();
-      // Update the uri so the page for the selected world can be refreshed and bookmarked
-      $location.path('/world/' + $scope.worldId);
-    }
-  });
+  $scope.desktopNotificationsCapable = function() {
+    return (window.webkitNotifications) ? true : false;
+  }
 
-  $scope.$watch('interval', setTimer);
+  $scope.toggleEventNotifications = function() {
+    if (eventNotificationsEnabled == false || (window.webkitNotifications && webkitNotifications.checkPermission() != 0)) {
+      webkitNotifications.requestPermission(function() { eventNotificationsEnabled = true; $scope.$apply(); });
+    } else {
+      eventNotificationsEnabled = false;
+    }
+  }
+
+  $scope.isEventNotificationsEnabled = function() {
+    return eventNotificationsEnabled && window.webkitNotifications && webkitNotifications.checkPermission() == 0;
+  }
+
+  var addNotifyEvent = function(e) {
+    if ($scope.isEventNotificationsEnabled()) { eventsToNotify.push(e); }
+  }
+
+  var notify = function() {
+    if (eventsToNotify.length > 0 && $scope.isEventNotificationsEnabled()) {
+      var text = "";
+      for (var i = 0; i < eventsToNotify.length; i++) {
+        text = text + '"' + eventsToNotify[i].name + '" is active NAO!';
+        text = text + "\n";
+      }
+      webkitNotifications.createNotification('', "A Wild Dragon has Appeared in Tyria!", text).show();
+    }
+  }
 });
