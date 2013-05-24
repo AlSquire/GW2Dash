@@ -21,7 +21,7 @@
 
     <div class="navbar">
       <div class="navbar-inner">
-        <div class="brand">Guild Wars 2 API + AngularJS</a>
+        <div class="brand">Guild Wars 2 API + AngularJS (BETA I suppose)</a>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
       </div>
 
       <section id="wvw" class="span4">
-        <h2>WvW</h2>
+        <h2>WvW score</h2>
         <section>
           <h3>Red: {{redWorld.name}}</h3>
           {{redWorld.score}}
