@@ -61,13 +61,20 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
           }
 
           // Get the new states for the watched events
-          for (var i = 0; i < $scope.watchedEvents.length; i++) {
-            we = $scope.watchedEvents[i];
-            we.state = Events.get({ world_id: $scope.worldId, event_id: we.id}).$then(function(result) {
-              e = result.data.events[0];
-              return (e && e.state) ? e.state : "Inactive";
-            });
-          }
+          Events.get({ world_id: $scope.worldId }, function(data) {
+            events = data.events;
+            for (var i = 0; i < $scope.watchedEvents.length; i++) {
+              we = $scope.watchedEvents[i];
+              we.state = "Inactive";
+              for (var j = 0; j < events.length; j++) {
+                e = events[j];
+                if (e && e.event_id == we.id) {
+                  we.state = e.state;
+                  break;
+                }
+              }
+            }
+          });
 
           break;
         }
@@ -88,7 +95,7 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
   $scope.$watch('interval', setTimer);
 
   $scope.$watch('watchedEvents', function(newVal, oldVal) {
-    for (i = 0; i < oldVal.length; i++) {
+    for (var i = 0; i < oldVal.length; i++) {
       if (oldVal[i].state != 'Active' && newVal[i].state == 'Active') {
         notifyEvent(newVal[i]);
       }
