@@ -29,7 +29,11 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
   $scope.watchedEvents = [
     { id: "0464CB9E-1848-4AAA-BA31-4779A959DD71", name: "Claw of Jormag" },
     { id: "568A30CF-8512-462F-9D67-647D69BEFAED", name: "Tequatl the Sunless" },
-    { id: "03BF176A-D59F-49CA-A311-39FC6F533F2F", name: "The Shatterer" }
+    { id: "03BF176A-D59F-49CA-A311-39FC6F533F2F", name: "The Shatterer" },
+    { id: "31CEBA08-E44D-472F-81B0-7143D73797F5", name: "Shadow behemoth."},
+    { id: "33F76E9E-0BB6-46D0-A3A9-BE4CDFC4A3A4", name: "Fire elemental"},
+    { id: "C5972F64-B894-45B4-BC31-2DEEA6B7C033", name: "Jungle wurm"},
+    { id: "9AA133DC-F630-4A0E-BB5D-EE34A2B306C2", name: "Golem Mark II"}
   ]
 
   var eventNotificationsEnabled = false;
