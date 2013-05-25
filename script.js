@@ -37,7 +37,7 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
 
   var fetch = function() {
     Matches.get({}, function(data) {
-      // Loop through the matches to find the one in wich one the selected world is participating
+      // Loop through the matches to find in wich one the selected world is participating
       for (var i = 0; i < data.wvw_matches.length; i++) {
         m = data.wvw_matches[i];
         if (m.red_world_id == $scope.worldId || m.blue_world_id == $scope.worldId || m.green_world_id == $scope.worldId) {
@@ -60,23 +60,23 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
             if (m.green_world_id == w.id) { $scope.greenWorld.name = w.name; }
           }
 
-          // Get the new states for the watched events
-          Events.get({ world_id: $scope.worldId }, function(data) {
-            events = data.events;
-            for (var i = 0; i < $scope.watchedEvents.length; i++) {
-              we = $scope.watchedEvents[i];
-              we.state = "Inactive";
-              for (var j = 0; j < events.length; j++) {
-                e = events[j];
-                if (e && e.event_id == we.id) {
-                  we.state = e.state;
-                  break;
-                }
-              }
-            }
-          });
-
           break;
+        }
+      }
+    });
+
+    // Get the new states for the watched events
+    Events.get({ world_id: $scope.worldId }, function(data) {
+      events = data.events;
+      for (var i = 0; i < $scope.watchedEvents.length; i++) {
+        we = $scope.watchedEvents[i];
+        we.state = "Inactive";
+        for (var j = 0; j < events.length; j++) {
+          e = events[j];
+          if (e && e.event_id == we.id) {
+            we.state = e.state;
+            break;
+          }
         }
       }
     });
