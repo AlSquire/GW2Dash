@@ -13,6 +13,14 @@
       font-size: 0.8em;
       margin-top: 1em;
     }
+    .event {
+      color: #cccccc;
+    }
+    .event.state_active {
+      color: orange;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
   </style>
 </head> 
 
@@ -41,10 +49,10 @@
 
         <button class="btn" ng-click="refresh()">Refresh</button>
 
-        <button class="btn btn-primary" ng-click="toggleEventNotifications()" ng-disabled="!desktopNotificationsCapable()" title="Desktop notifications, webkit only">{{ isEventNotificationsEnabled() && 'Disable notifications' || 'Can I Has Notify?' }} </button>
+        <button class="btn btn-primary" ng-click="toggleEventNotifications()" ng-disabled="!desktopNotificationsCapable()" title="Desktop notifications, webkit only">{{ isEventNotificationsEnabled() && 'Disable notifications' || 'Can I Has Notify?' }}</button>
 
         <p class="infos">
-          Select a world, a refresh interval (or not) and that's it. If you have a Webkit browser (Chrome or Safari) you can also receive desktop notifications for "Active" dragon events by pressing the big blue button.
+          Select a world, a refresh interval (or not) and that's it. If you have a Webkit browser (Chrome or Safari) and don't play fullscreen, you can also receive desktop notifications for "Active" dragon events by pressing the big blue button.
         </p>
         <hr>
         <p class="infos">
@@ -72,10 +80,11 @@
 
       <section id="watched_events" class="span4">
         <h2>Dragons watcher</h2>
-        <section ng-repeat="e in watchedEvents" class="state_{{e.state | lowercase}}">
-          <h3>{{e.name}}</h3>
-          {{e.state}}
-        </section>
+        <ul>
+          <li ng-repeat="e in watchedEvents | orderBy:['state', 'name']" class="event state_{{e.state | lowercase}}">
+        {{e.name}}
+          </li>
+        </ul>
       </section>
     </div>
   </div>

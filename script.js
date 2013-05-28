@@ -37,7 +37,6 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
   ]
 
   var eventNotificationsEnabled = false;
-  var eventsToNotify = [];
 
   var fetch = function() {
     Matches.get({}, function(data) {
