@@ -21,6 +21,9 @@
       font-size: 1.2em;
       font-weight: bold;
     }
+    #wvw table td {
+      text-align: right;
+    }
   </style>
 </head> 
 
@@ -64,18 +67,48 @@
 
       <section id="wvw" class="span4">
         <h2>WvW score</h2>
-        <section>
-          <h3>Red: {{redWorld.name}}</h3>
-          {{redWorld.score}}
-        </section>
-        <section>
-          <h3>Blue: {{blueWorld.name}}</h3>
-          {{blueWorld.score}}
-        </section>
-        <section>
-          <h3>Green: {{greenWorld.name}}</h3>
-          {{greenWorld.score}}
-        </section>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Red:<br> {{redWorld.name}}</th>
+              <th>Blue:<br> {{blueWorld.name}}</th>
+              <th>Green:<br> {{greenWorld.name}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>EB</th>
+              <td>{{redWorld.score['Center']}}</td>
+              <td>{{blueWorld.score['Center']}}</td>
+              <td>{{greenWorld.score['Center']}}</td>
+            </tr>
+            <tr>
+              <th>Red</th>
+              <td>{{redWorld.score['RedHome']}}</td>
+              <td>{{blueWorld.score['RedHome']}}</td>
+              <td>{{greenWorld.score['RedHome']}}</td>
+            </tr>
+            <tr>
+              <th>Blue</th>
+              <td>{{redWorld.score['BlueHome']}}</td>
+              <td>{{blueWorld.score['BlueHome']}}</td>
+              <td>{{greenWorld.score['BlueHome']}}</td>
+            </tr>
+            <tr>
+              <th>Green</th>
+              <td>{{redWorld.score['GreenHome']}}</td>
+              <td>{{blueWorld.score['GreenHome']}}</td>
+              <td>{{greenWorld.score['GreenHome']}}</td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <td>{{redWorld.score['Total']}}</td>
+              <td>{{blueWorld.score['Total']}}</td>
+              <td>{{greenWorld.score['Total']}}</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section id="watched_events" class="span4">

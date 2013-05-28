@@ -50,9 +50,21 @@ app.controller('gw2Ctrl', function($scope, $http, $resource, $location, $route, 
           // Moar details pliz
           MatchDetails.get({ match_id: $scope.matchId }, function(data) {
             $scope.matchDetails = data;
-            $scope.redWorld.score = data.scores[0];
-            $scope.blueWorld.score = data.scores[1];
-            $scope.greenWorld.score = data.scores[2];
+
+            $scope.redWorld.score = {};
+            $scope.blueWorld.score = {};
+            $scope.greenWorld.score = {};
+
+            $scope.redWorld.score['Total'] = data.scores[0];
+            $scope.blueWorld.score['Total'] = data.scores[1];
+            $scope.greenWorld.score['Total'] = data.scores[2];
+
+            for (var j = 0; j < data.maps.length; j++) {
+              map = data.maps[j];
+              $scope.redWorld.score[map.type] = map.scores[0];
+              $scope.blueWorld.score[map.type] = map.scores[1];
+              $scope.greenWorld.score[map.type] = map.scores[2];
+            }
           });
           
           // Retrieve the name of the three worlds in this match
