@@ -1,4 +1,5 @@
 angular = window.angular
+console = window.console
 
 app = angular.module('gw2App', ['ngResource'])
 
@@ -11,7 +12,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   delete $http.defaults.headers.common['X-Requested-With']
 
   $scope.$on "$routeChangeSuccess", ($currentRoute, $previousRoute) ->
-    $scope.worldId = $routeParams.worldId
+    $scope.worldId = parseInt($routeParams.worldId)
 
   Worlds = $resource('https://api.guildwars2.com/v1/world_names.json')
   Matches = $resource('https://api.guildwars2.com/v1/wvw/matches.json')
@@ -21,7 +22,10 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   timer = null
   $scope.interval = 0
 
-  $scope.worlds = Worlds.query()
+  $scope.worlds = Worlds.query (records)->
+    for r in records
+      r.id = parseInt(r.id)
+    
   $scope.redWorld = {}
   $scope.blueWorld = {}
   $scope.greenWorld = {}
