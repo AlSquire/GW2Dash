@@ -1,5 +1,4 @@
 angular = window.angular
-console = window.console
 
 app = angular.module('gw2App', ['ngResource'])
 
