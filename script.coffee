@@ -37,6 +37,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
     { id: "33F76E9E-0BB6-46D0-A3A9-BE4CDFC4A3A4", name: "Fire elemental"},
     { id: "C5972F64-B894-45B4-BC31-2DEEA6B7C033", name: "Jungle wurm"},
     { id: "9AA133DC-F630-4A0E-BB5D-EE34A2B306C2", name: "Golem Mark II"},
+    { id: "9AA133DC-F630-4A0E-BB5D-EE34A2B306C2", name: "Megadestroyer"},
 
     { id: "2555EFCB-2927-4589-AB61-1957D9CC70C8", name: "Balthazar"},
     { id: "A5B5C2AF-22B1-4619-884D-F231A0EE0877", name: "Melandru"},
@@ -50,7 +51,13 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
     { id: "95CA969B-0CC6-4604-B166-DBCCE125864F", name: "Dredge Commissar"},
     { id: "242BD241-E360-48F1-A8D9-57180E146789", name: "Taidha Covington"},
     { id: "295E8D3B-8823-4960-A627-23E07575ED96", name: "Fire Shaman"},
-    { id: "A0796EC5-191D-4389-9C09-E48829D1FDB2", name: "Eye of Zaithan"}
+    { id: "A0796EC5-191D-4389-9C09-E48829D1FDB2", name: "Eye of Zaithan"},
+
+    # Four events for the Karka Queen?
+    # { id: "E1CC6E63-EFFE-4986-A321-95C89EA58C07", name: "Defeat the Karka Queen threatening the settlements."},
+    # { id: "F479B4CF-2E11-457A-B279-90822511B53B", name: "Defeat the Karka Queen threatening the settlements."},
+    # { id: "5282B66A-126F-4DA4-8E9D-0D9802227B6D", name: "Defeat the Karka Queen threatening the settlements."},
+    { id: "4CF7AA6E-4D84-48A6-A3D1-A91B94CCAD56", name: "Karka Queen (Beta)"}
   ]
 
   eventNotificationsEnabled = false
