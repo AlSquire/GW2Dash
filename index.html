@@ -25,6 +25,25 @@
     #wvw table td {
       text-align: right;
     }
+    input[type="range"] {
+        position: relative;
+        margin-left: 1em;
+        margin-bottom: 1.3em;
+    }
+    input[type="range"]:after,
+    input[type="range"]:before {
+        position: absolute;
+        top: 1em;
+        color: #aaa;
+    }
+    input[type="range"]:before {
+        left:0em;
+        content: attr(min);
+    }
+    input[type="range"]:after {
+        right: 0em;
+        content: attr(max);
+    }
   </style>
 </head> 
 
@@ -42,18 +61,12 @@
         <label for="world_select">World</label>
         <select id="world_select" ng-model="worldId" ng-options="world.id as world.name for world in worlds | orderBy:'name'"></select>
 
-        <label for="interval_select">Refresh every</label>
-        <select id="interval_select" ng-model="interval">
-          <option value="10000">10s</option>
-          <option value="30000">30s</option>
-          <option value="60000">1min</option>
-          <option value="300000">5min</option>
-          <option value="0">... time I hit the refresh button</option>
-        </select>
+        <label for="interval_select">Refresh every : {{interval}}s</label>
+        <input type="range" ng-model="interval" min="0" max="60" step="5">
 
-        <button class="btn" ng-click="refresh()">Refresh</button>
+        <button class="btn btn-small" ng-click="refresh()">Refresh manually</button>
 
-        <button class="btn btn-primary" ng-click="toggleEventNotifications()" ng-disabled="!desktopNotificationsCapable()" title="Desktop notifications, webkit only">{{ isEventNotificationsEnabled() && 'Disable notifications' || 'Can I Has Notify?' }}</button>
+        <button class="btn btn-primary btn-small" ng-click="toggleEventNotifications()" ng-disabled="!desktopNotificationsCapable()" title="Desktop notifications, webkit only">{{ isEventNotificationsEnabled() && 'Disable notifications' || 'Can I Has Notify?' }}</button>
 
         <p class="infos">
           Select a world, a refresh interval (or not) and that's it. If you have a Webkit browser (Chrome or Safari) and don't play fullscreen, you can also receive desktop notifications for "Active" dragon events by pressing the big blue button.

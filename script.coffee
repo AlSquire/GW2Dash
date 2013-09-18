@@ -165,7 +165,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
       timer = $timeout(->
         fetch()
         setTimer()
-      , $scope.interval)
+      , $scope.interval * 1000)
 
   $scope.desktopNotificationsCapable = ->
     (window.webkitNotifications) ? true : false
