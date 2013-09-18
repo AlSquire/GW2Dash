@@ -14,6 +14,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
     $scope.worldId = parseInt($routeParams.worldId)
 
   Worlds = $resource('https://api.guildwars2.com/v1/world_names.json')
+  Maps = $resource('https://api.guildwars2.com/v1/map_names.json')
   Matches = $resource('https://api.guildwars2.com/v1/wvw/matches.json')
   MatchDetails = $resource('https://api.guildwars2.com/v1/wvw/match_details.json')
   Events = $resource('https://api.guildwars2.com/v1/events.json')
@@ -24,10 +25,28 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   $scope.worlds = Worlds.query (records)->
     for r in records
       r.id = parseInt(r.id)
+
+  maps = Maps.query()
     
   $scope.redWorld = {}
   $scope.blueWorld = {}
   $scope.greenWorld = {}
+
+  scarletEventIds = [
+    "92979945-63A4-42D7-8AE5-1EFADC9E636F",
+    "46BBCFDD-1285-4246-A9FA-620773C7D4C6",
+    "9795C994-4C12-4E1F-82A6-D541F76D9D37",
+    "FE5F6233-DAD6-4C63-921D-F132DFCF3397",
+    "90FEBBE9-0066-42CF-9C48-703C920AFB9D",
+    "CF657BC1-D5CE-41D3-A630-A3E509451B7A",
+    "6DEB01AE-675E-4FF9-9789-53CB73FC621E",
+    "11442531-6B20-411F-B0A6-D2A2C31DD668",
+    "5FE50E83-758B-4573-A424-A1661FBC970A",
+    "C7CC535C-81A1-4E84-993B-6384C911399A",
+    "526EFDC9-3F3C-492E-911E-14AFE9EAE70D",
+    "D1B8B6D2-5E61-44DE-92C6-D49A9BBBB6E2",
+    "6195E248-1DD4-452B-A7DD-3472162E0683"
+  ]
 
   $scope.watchedEvents = [
     { id: "0464CB9E-1848-4AAA-BA31-4779A959DD71", name: "Claw of Jormag" },
@@ -96,15 +115,30 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
                       
           break
 
-    # Get the new states for the watched events
     Events.get { world_id: $scope.worldId }, (data) ->
       events = data.events
-      for we in $scope.watchedEvents
-        we.state = "Inactive"
-        for e in events
+
+      for e in events
+        # Get the new states for the watched events
+        for we in $scope.watchedEvents
           if (e && e.event_id == we.id)
             we.state = e.state
             break
+        # Get Scarlet's Invasion map
+        $scope.scarletMap = null
+        for seId in scarletEventIds
+          if (e && e.event_id == seId)
+            for map in maps
+              $scope.scarletMap = map.name if map.id == e.map_id
+
+      # Get the new states for the watched events
+      # for we in $scope.watchedEvents
+      #   we.state = "Inactive"
+      #   for e in events
+      #     if (e && e.event_id == we.id)
+      #       we.state = e.state
+      #       break
+
 
  # When a world is selected...
   $scope.$watch 'worldId', ->
@@ -119,8 +153,11 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   $scope.$watch('watchedEvents', (newVal, oldVal) ->
     for i in [0..oldVal.length - 1] by 1
       if (oldVal[i].state != 'Active' && newVal[i].state == 'Active')
-        notifyEvent(newVal[i])
+        notify text: '"' + newVal[i].name + '" is active NAO!', title: "A Wild Dragon has Appeared in Tyria!"
   , true)
+
+  $scope.$watch 'scarletMap', (newVal, oldVal) ->
+    notify text: 'Scarlet is invading ' + newVal + '!', title: 'Scarlet again, looting time!' if newVal? # If null, no more invasion
 
   setTimer = ->
     $timeout.cancel(timer)
@@ -142,10 +179,9 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   $scope.isEventNotificationsEnabled = ->
     eventNotificationsEnabled && window.webkitNotifications && webkitNotifications.checkPermission() == 0
 
-  notifyEvent = (e) ->
+  notify = (e) ->
     if $scope.isEventNotificationsEnabled()
-      text = '"' + e.name + '" is active NAO!'
-      webkitNotifications.createNotification('', "A Wild Dragon has Appeared in Tyria!", text).show()
+      webkitNotifications.createNotification('', e.title, e.text).show()
 
   $scope.refresh = ->
     fetch()
