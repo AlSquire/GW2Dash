@@ -118,6 +118,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
     Events.get { world_id: $scope.worldId }, (data) ->
       events = data.events
 
+      $scope.scarletMap = null
       for e in events
         # Get the new states for the watched events
         for we in $scope.watchedEvents
@@ -125,20 +126,14 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
             we.state = e.state
             break
         # Get Scarlet's Invasion map
-        $scope.scarletMap = null
         for seId in scarletEventIds
-          if (e && e.event_id == seId)
+          if (e && e.event_id == seId && e.state == "Active")
+            # console.log seId
             for map in maps
-              $scope.scarletMap = map.name if map.id == e.map_id
-
-      # Get the new states for the watched events
-      # for we in $scope.watchedEvents
-      #   we.state = "Inactive"
-      #   for e in events
-      #     if (e && e.event_id == we.id)
-      #       we.state = e.state
-      #       break
-
+              if parseInt(map.id) == e.map_id
+                $scope.scarletMap = map.name 
+                break
+          break if $scope.scarletMap?
 
  # When a world is selected...
   $scope.$watch 'worldId', ->
