@@ -1,6 +1,23 @@
 angular = window.angular
 
-app = angular.module('gw2App', ['ngResource'])
+# moment.lang('en', { relativeTime: { s: "%d seconds" } })
+moment.lang 'en',
+  relativeTime :
+    future: "in %s"
+    past:   "%s ago"
+    s:  "%d seconds"
+    m:  "a minute"
+    mm: "%d minutes"
+    h:  "an hour"
+    hh: "%d hours"
+    d:  "a day"
+    dd: "%d days"
+    M:  "a month"
+    MM: "%d months"
+    y:  "a year"
+    yy: "%d years"
+
+app = angular.module('gw2App', ['ngResource', 'angularMoment'])
 
 app.config ($routeProvider, $locationProvider) ->
   $routeProvider.when('/world/:worldId', { controller: 'gw2Ctrl' })
@@ -82,6 +99,8 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
   eventNotificationsEnabled = false
 
   fetch = ->
+    $scope.lastRefresh = Date.now()
+
     Matches.get {}, (data) ->
       # Loop through the matches to find in wich one the selected world is participating
       for m in data.wvw_matches
