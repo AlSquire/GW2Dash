@@ -73,7 +73,7 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
     { id: "33F76E9E-0BB6-46D0-A3A9-BE4CDFC4A3A4", name: "Fire elemental"},
     { id: "C5972F64-B894-45B4-BC31-2DEEA6B7C033", name: "Jungle wurm"},
     { id: "9AA133DC-F630-4A0E-BB5D-EE34A2B306C2", name: "Golem Mark II"},
-    { id: "9AA133DC-F630-4A0E-BB5D-EE34A2B306C2", name: "Megadestroyer"},
+    { id: "C876757A-EF3E-4FBE-A484-07FF790D9B05", name: "Megadestroyer"},
 
     { id: "2555EFCB-2927-4589-AB61-1957D9CC70C8", name: "Balthazar"},
     { id: "A5B5C2AF-22B1-4619-884D-F231A0EE0877", name: "Melandru"},
