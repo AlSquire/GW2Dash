@@ -17,7 +17,7 @@ moment.lang 'en',
     y:  "a year"
     yy: "%d years"
 
-app = angular.module('gw2App', ['ngResource', 'angularMoment'])
+app = angular.module('gw2App', ['ngRoute', 'ngResource', 'angularMoment'])
 
 app.config ($routeProvider, $locationProvider) ->
   $routeProvider.when('/world/:worldId', { controller: 'gw2Ctrl' })
