@@ -161,9 +161,6 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
       # Update the uri so the page for the selected world can be refreshed and bookmarked
       $location.path('/world/' + $scope.worldId)
 
-  # Set the selected refresh time interval
-  $scope.$watch('interval', setTimer)
-
   $scope.$watch('watchedEvents', (newVal, oldVal) ->
     for i in [0..oldVal.length - 1] by 1
       if (oldVal[i].state != 'Active' && newVal[i].state == 'Active')
@@ -180,6 +177,10 @@ app.controller 'gw2Ctrl', ($scope, $http, $resource, $location, $route, $routePa
         fetch()
         setTimer()
       , $scope.interval * 1000)
+
+  $scope.interval = "0"
+  # Set the selected refresh time interval
+  $scope.$watch('interval', setTimer)
 
   $scope.desktopNotificationsCapable = ->
     (window.webkitNotifications) ? true : false
